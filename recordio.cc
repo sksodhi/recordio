@@ -14,10 +14,8 @@
 #include <zlib.h>
 #include <memory>
 #include <string>
-#include "base/logging.h"
-#include "base/recordio.h"
+#include "recordio.h"
 
-namespace operations_research {
 const int RecordWriter::kMagicNumber = 0x3ed7230a;
 
 RecordWriter::RecordWriter(File* const file)
@@ -40,9 +38,7 @@ std::string RecordWriter::Compress(std::string const& s) const {
       compress(reinterpret_cast<unsigned char*>(destination.get()), &dsize,
                reinterpret_cast<const unsigned char*>(source), source_size);
 
-  if (result != Z_OK) {
-    LOG(FATAL) << "Compress error occured! Error code: " << result;
-  }
+  assert(result == Z_OK);
   return std::string(destination.get(), dsize);
 }
 
@@ -50,17 +46,15 @@ RecordReader::RecordReader(File* const file) : file_(file) {}
 
 bool RecordReader::Close() { return file_->Close(); }
 
-void RecordReader::Uncompress(const char* const source, uint64 source_size,
+void RecordReader::Uncompress(const char* const source, uint64_t source_size,
                               char* const output_buffer,
-                              uint64 output_size) const {
+                              uint64_t output_size) const {
   unsigned long result_size = output_size;  // NOLINT
   // Use uncompress() from zlib.h
   const int result =
       uncompress(reinterpret_cast<unsigned char*>(output_buffer), &result_size,
                  reinterpret_cast<const unsigned char*>(source), source_size);
-  if (result != Z_OK) {
-    LOG(FATAL) << "Uncompress error occured! Error code: " << result;
-  }
-  CHECK_LE(result_size, static_cast<unsigned long>(output_size));  // NOLINT
+  
+  assert(result == Z_OK);
+  assert(result_size == static_cast<unsigned long>(output_size));
 }
-}  // namespace operations_research

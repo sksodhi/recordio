@@ -1,44 +1,35 @@
-These modules have been tested under:
-  - Ubuntu 14.04 and 16.04 up (64-bit).
-  - Mac OS X El Capitan with Xcode 7.x (64 bit).
-  - Microsoft Windows with Visual Studio 2013 and 2015 (64-bit)
+RecordReader and RecordWriter from or-tools
+===========================================
 
-Upon checking out the repository, you will get the following structure:
+This repository contains standalone versions of the [RecordReader](https://developers.google.com/optimization/reference/base/recordio/RecordReader/) and [RecordWriter](https://developers.google.com/optimization/reference/base/recordio/RecordWriter/) classes from the
+[Google Optimization Tools](https://developers.google.com/optimization/) library (or-tools). These classes together provide interfaces for
+quickly reading and writing compressed Protobuf steams to disk.
 
-or-tools/
-  LICENSE-2.0.txt        <- Apache license
-  Makefile               <- Top-level Makefile
-  CONTRIBUTING           <- Contribution guidelines
-  README                 <- This file
-  bin/                   <- Compiled binaries
-  dependencies/          <- Built dependencies
-  examples/              <- Root directory for all examples
-  examples/com/          <- Java examples
-  examples/cpp/          <- C++ examples
-  examples/csharp/       <- C# examples
-  examples/data/         <- Data files for examples
-  examples/flatzinc/     <- Flatzinc examples
-  examples/python/       <- Python examples
-  examples/tests/        <- C# unit tests and bug reports
-  lib/                   <- Libraries and jar files
-  makefiles/             <- Subsidiary makefiles
-  objs/                  <- C++ object files
-  src/                   <- Source code
-  src/algorithms/        <- Basic algorithms
-  src/base/              <- Basic utilities
-  src/bop/               <- Boolean solver based on SAT
-  src/com/               <- C# and Java source files
-  src/constraint_solver/ <- Constraint solver
-  src/flatzinc/          <- Flatzinc interpreter
-  src/gen/               <- Generated files
-  src/glop/              <- Linear solver
-  src/graph/             <- Graph algorithms
-  src/linear_solver/     <- Linear solver wrapper
-  src/lp_data/           <- Data structures for linear model
-  src/ortools            <- Python source code
-  src/sat/               <- Sat solver
-  src/util/              <- Utilities needed by the constraint solver
-  tools/                 <- Windows binaries
+If you're looking to stream protobufs to a file (in C++), this is what you want!
 
-For installation instructions (both source and binary), visit
-https://developers.google.com/optimization/installing.
+Example
+-------
+
+    File* file = File::Open("test.log", "w");
+    RecordWriter writer(file);
+
+    MyProtoMessage msg;
+    msg.set_id(42);
+    msg.set_name("frog");
+
+    writer.WriteProtocolMessage(msg);
+    writer.Close();
+
+Requirements
+------------
+
+* C++11
+* protobuf (-lprotobuf)
+* zlib (-lz)
+
+License
+-------
+
+Apache 2.0
+
+or-tools is Copyright 2010-2014 Google

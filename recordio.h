@@ -11,16 +11,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef OR_TOOLS_BASE_RECORDIO_H_
-#define OR_TOOLS_BASE_RECORDIO_H_
+#ifndef RECORD_IO_RECORDIO_H_
+#define RECORD_IO_RECORDIO_H_
 
 #include <memory>
 #include <string>
-#include "base/file.h"
+#include "file.h"
 
 // This file defines some IO interfaces to compatible with Google
 // IO specifications.
-namespace operations_research {
+
 // This class appends a protocol buffer to a file in a binary format.
 // The data written in the file follows the following format (sequentially):
 // - MagicNumber (32 bits) to recognize this format.
@@ -40,10 +40,10 @@ class RecordWriter {
   bool WriteProtocolMessage(const P& proto) {
     std::string uncompressed_buffer;
     proto.SerializeToString(&uncompressed_buffer);
-    const uint64 uncompressed_size = uncompressed_buffer.size();
+    const uint64_t uncompressed_size = uncompressed_buffer.size();
     const std::string compressed_buffer =
         use_compression_ ? Compress(uncompressed_buffer) : "";
-    const uint64 compressed_size = compressed_buffer.size();
+    const uint64_t compressed_size = compressed_buffer.size();
     if (file_->Write(&kMagicNumber, sizeof(kMagicNumber)) !=
         sizeof(kMagicNumber)) {
       return false;
@@ -88,8 +88,8 @@ class RecordReader {
 
   template <class P>
   bool ReadProtocolMessage(P* const proto) {
-    uint64 usize = 0;
-    uint64 csize = 0;
+    uint64_t usize = 0;
+    uint64_t csize = 0;
     int magic_number = 0;
     if (file_->Read(&magic_number, sizeof(magic_number)) !=
         sizeof(magic_number)) {
@@ -125,11 +125,10 @@ class RecordReader {
   bool Close();
 
  private:
-  void Uncompress(const char* const source, uint64 source_size,
-                  char* const output_buffer, uint64 output_size) const;
+  void Uncompress(const char* const source, uint64_t source_size,
+                  char* const output_buffer, uint64_t output_size) const;
 
   File* const file_;
 };
-}  // namespace operations_research
 
-#endif  // OR_TOOLS_BASE_RECORDIO_H_
+#endif  // RECORD_IO_RECORDIO_H_
