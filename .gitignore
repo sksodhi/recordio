@@ -1,28 +1,9 @@
-Makefile.local
+test
+librecordio.a
 
-dependencies/archives/
-!dependencies/archives/autoconf.patch
-!dependencies/archives/patchelf-0.8.tar.gz
-
-dependencies/install/
-dependencies/sources/
-
-
-or-tools*.tar.gz
-or-tools*.zip
-*.a
 *.o
-*.so
-*.py[co]
-*.lib
-*.exp
-*.pdb
-*.ass
+*.a
+*.pb.h
+*.pb.cc
+*.log
 
-bin/
-src/gen/
-objs/
-temp/
-lib/
-examples/csharp/solution/*.csproj
-examples/csharp/*.sln
